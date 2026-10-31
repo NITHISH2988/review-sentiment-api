@@ -1,6 +1,36 @@
 # Review Sentiment API
 
-Compare a TF-IDF sentiment baseline with an optional transformer and serve predictions through FastAPI. This project compares a traditional NLP baseline with an optional pretrained transformer and serves either through FastAPI.
+Compare a TF-IDF sentiment baseline with optional pretrained transformer inference, then serve predictions through FastAPI.
+
+## Problem
+
+The project demonstrates a reproducible binary text-classification workflow and a small prediction API. The dataset is supplied by the user because no review corpus with suitable documented terms is bundled.
+
+## Features
+
+- TF-IDF unigrams/bigrams and balanced logistic-regression baseline.
+- Stratified held-out evaluation and saved metrics/artifact.
+- Optional pretrained transformer inference comparison on the same test examples (no fine-tuning).
+- Validated FastAPI endpoint with lazy model loading, explicit backend selection and error responses.
+- Docker image definition for serving a previously trained baseline artifact.
+
+## Architecture
+
+```mermaid
+flowchart LR
+  A[User CSV] --> B[Clean rows and validate binary labels]
+  B --> C[Stratified train/test split]
+  C --> D[TF-IDF + logistic regression fit]
+  C --> E[Optional pretrained transformer inference]
+  D --> F[Metrics + joblib pipeline]
+  E --> G[Comparable held-out metrics]
+  F --> H[FastAPI cached TF-IDF model]
+  I[Transformer configuration] --> J[FastAPI cached transformer]
+  H --> K[/predict]
+  J --> K
+```
+
+**Stack:** Python, pandas, scikit-learn, Hugging Face Transformers/PyTorch optional extra, FastAPI/Pydantic, joblib, Docker, pytest and Ruff.
 
 ## Models and data
 
@@ -68,6 +98,14 @@ Tests cover preprocessing, both class labels, prediction confidence, joblib arti
 ## Trade-offs and limitations
 
 TF-IDF with logistic regression is compact, fast, and comparatively interpretable, but relies on sparse n-gram overlap and has limited contextual understanding. A transformer can model richer context but uses more memory, takes longer to load, and inherits its training data's domain and bias limits. No real review dataset results are documented here because no licensed corpus has been selected. Sentiment is subjective and the endpoint is not suitable for consequential decisions.
+
+## Roadmap
+
+- Select a licensed review dataset and report a reproducible baseline result.
+- Add duplicate/group-aware evaluation when the dataset has product or reviewer IDs.
+- Measure probability calibration and startup latency before proposing serving optimizations.
+
+See [DEVELOPER_GUIDE.md](DEVELOPER_GUIDE.md) for source walkthroughs and the baseline/transformer distinctions.
 
 ## License
 
