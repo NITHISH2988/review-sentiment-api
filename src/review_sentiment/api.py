@@ -30,11 +30,14 @@ class PredictionRequest(BaseModel):
 
 @lru_cache(maxsize=1)
 def get_model():
-    if os.getenv("SENTIMENT_BACKEND", "tfidf").casefold() == "transformer":
+    backend = os.getenv("SENTIMENT_BACKEND", "tfidf").strip().casefold()
+    if backend == "transformer":
         return TransformerPredictor(
             os.getenv("SENTIMENT_TRANSFORMER_MODEL", DEFAULT_TRANSFORMER_MODEL)
         )
-    return load_model(MODEL_PATH)
+    if backend == "tfidf":
+        return load_model(MODEL_PATH)
+    raise ValueError("SENTIMENT_BACKEND must be 'tfidf' or 'transformer'")
 
 
 @app.get("/health")

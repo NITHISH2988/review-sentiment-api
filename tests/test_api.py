@@ -73,3 +73,14 @@ def test_optional_transformer_backend_is_configurable(monkeypatch):
     assert response.status_code == 200
     assert response.json() == {"label": "positive", "confidence": 0.75}
     api.get_model.cache_clear()
+
+
+def test_unknown_backend_returns_service_unavailable(monkeypatch):
+    monkeypatch.setenv("SENTIMENT_BACKEND", "transfomer")
+    api.get_model.cache_clear()
+
+    response = TestClient(api.app).post("/predict", json={"text": "a review"})
+
+    assert response.status_code == 503
+    assert response.json()["detail"] == "Sentiment model is unavailable"
+    api.get_model.cache_clear()
