@@ -1,6 +1,6 @@
 # Review Sentiment API
 
-This project compares a traditional NLP baseline with an optional pretrained transformer and serves either through FastAPI.
+Compare a TF-IDF sentiment baseline with an optional transformer and serve predictions through FastAPI. This project compares a traditional NLP baseline with an optional pretrained transformer and serves either through FastAPI.
 
 ## Models and data
 
