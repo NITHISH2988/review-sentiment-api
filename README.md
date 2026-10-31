@@ -4,6 +4,8 @@ Compare a TF-IDF sentiment baseline with an optional transformer and serve predi
 
 ## Models and data
 
+For module-by-module walkthroughs, reproduction steps, and interview concepts, see [DEVELOPER_GUIDE.md](DEVELOPER_GUIDE.md).
+
 The baseline is a scikit-learn pipeline: whitespace/case normalization, TF-IDF word unigrams and bigrams, then balanced logistic regression. Training data is supplied by the user as CSV; no review corpus is bundled. Verify the dataset license and terms before use.
 
 CSV columns:
